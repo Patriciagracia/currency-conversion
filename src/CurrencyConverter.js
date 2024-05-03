@@ -4,10 +4,13 @@ import axios from "axios";
 
 export default function CurrencyConverter() {
   const [rate, setRate] = useState({});
-  const [sourceCurrency, setSourceCurrency] = useState("");
-  const [targetCurrency, setTargetCurrency] = useState("");
-  const [sourceAmount, setSourceAmount] = useState(0);
-  const [targetAmount, setTargetAmount] = useState(0);
+  const [sourceCurrency, setSourceCurrency] = useState("AUD");
+  const [targetCurrency, setTargetCurrency] = useState("EUR");
+  const [sourceAmount, setSourceAmount] = useState(1);
+  const [targetAmount, setTargetAmount] = useState("");
+
+  let sourceRate = 1;
+  let targetRate = 1;
 
   useEffect(() => {
     fetchCurrencyData();
@@ -38,8 +41,17 @@ export default function CurrencyConverter() {
     const amount = e.target.value;
     setSourceAmount(amount);
 
-    const sourceRate = rate[sourceCurrency];
-    const targetRate = rate[targetCurrency];
+    sourceRate = rate[sourceCurrency];
+    //const targetRate = rate[targetCurrency];
+
+    if (targetCurrency === "EUR") {
+      console.log("ENTRA EN EURO");
+      targetRate = 1;
+    } else {
+      targetRate = rate[targetCurrency];
+      console.log("ENTRA EN ELSE");
+    }
+    console.log("(" + amount + "/" + sourceRate + ")*" + targetRate);
     const newAmount = (amount / sourceRate) * targetRate;
 
     setTargetAmount(newAmount);

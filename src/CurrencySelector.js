@@ -25,7 +25,7 @@ export default function CurrencySelector({ onChange }) {
       .catch((error) => {
         console.error("Error fetching currencies:", error);
       });
-  }, []);
+  }, [onChange]);
 
   return (
     <div>
