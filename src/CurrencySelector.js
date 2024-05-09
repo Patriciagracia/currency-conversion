@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import axios from "axios";
 
-export default function CurrencySelector({ onChange }) {
+export default function CurrencySelector({ onChange, defaultValue }) {
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(defaultValue);
 
-  const onChangeCurrency = (event) => {
-    setSelectedCurrency(event.target.value);
-    onChange(event.target.value);
+  const onChangeCurrency = (selectedOption) => {
+    setSelectedCurrency(selectedOption);
+    onChange(selectedOption.value);
   };
 
   useEffect(() => {
@@ -16,8 +17,8 @@ export default function CurrencySelector({ onChange }) {
       .then((response) => {
         const data = response.data;
         const options = Object.entries(data).map(([symbol, name]) => ({
-          symbol,
-          name,
+          value: symbol,
+          label: `${name} - ${symbol}`,
         }));
 
         setCurrencyOptions(options);
@@ -29,13 +30,11 @@ export default function CurrencySelector({ onChange }) {
 
   return (
     <div>
-      <select onChange={onChangeCurrency} value={selectedCurrency}>
-        {currencyOptions.map((currency) => (
-          <option key={currency.symbol} value={currency.symbol}>
-            {currency.name} - {currency.symbol}
-          </option>
-        ))}
-      </select>
+      <Select
+        value={selectedCurrency}
+        onChange={onChangeCurrency}
+        options={currencyOptions}
+      />
     </div>
   );
 }

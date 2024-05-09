@@ -1,0 +1,27 @@
+body {
+  min-height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #695087 !important;
+}
+
+.App {
+  margin-top: 10%;
+  background-color: white;
+  padding: 50px 60px 50px 60px;
+  border-radius: 15px;
+  font-family: "Jost", sans-serif;
+}
+
+.container h1 {
+  text-align: center;
+  font-weight: 700;
+  color: #ffffff !important;
+  font-size: calc(2rem + 1.5vw);
+}
+
+footer {
+  text-align: center;
+  color: #ffffff;
+}

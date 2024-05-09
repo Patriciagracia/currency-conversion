@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import "./styles/CurrencyConverter.css";
 import CurrencySelector from "./CurrencySelector";
 import axios from "axios";
 
 export default function CurrencyConverter() {
   const [rate, setRate] = useState({});
-  const [sourceCurrency, setSourceCurrency] = useState("AUD");
+  const [sourceCurrency, setSourceCurrency] = useState("GBP");
   const [targetCurrency, setTargetCurrency] = useState("EUR");
   const [sourceAmount, setSourceAmount] = useState(1);
-  const [targetAmount, setTargetAmount] = useState("");
-
+  const [targetAmount, setTargetAmount] = useState({});
+  const gbpOption = { value: "GBP", label: "British Pound - GBP" };
+  const eurOption = { value: "EUR", label: "Euro - EUR" };
   let sourceRate = 1;
   let targetRate = 1;
 
@@ -41,15 +43,16 @@ export default function CurrencyConverter() {
     const amount = e.target.value;
     setSourceAmount(amount);
 
-    sourceRate = rate[sourceCurrency];
-    //const targetRate = rate[targetCurrency];
+    if (sourceCurrency === "EUR") {
+      sourceRate = 1;
+    } else {
+      sourceRate = rate[sourceCurrency];
+    }
 
     if (targetCurrency === "EUR") {
-      console.log("ENTRA EN EURO");
       targetRate = 1;
     } else {
       targetRate = rate[targetCurrency];
-      console.log("ENTRA EN ELSE");
     }
     console.log("(" + amount + "/" + sourceRate + ")*" + targetRate);
     const newAmount = (amount / sourceRate) * targetRate;
@@ -58,9 +61,9 @@ export default function CurrencyConverter() {
   }
 
   return (
-    <div className="CurrencyConversionForm">
+    <div className="currencyConversionForm">
       <div className="container">
-        <div className="row">
+        <div className="row sourceData mb-3">
           <div className="col-6">
             <input
               value={sourceAmount}
@@ -68,25 +71,32 @@ export default function CurrencyConverter() {
               type="number"
             />
           </div>
-          <div className="col-6">
+          <div className="col-6 selector">
             <CurrencySelector
-              selectedCurrency={sourceCurrency}
               onChange={handleCurrencyChange}
+              defaultValue={gbpOption}
               rate={rate}
             />
           </div>
         </div>
-        <div className="row">
+        <div className="row targetData mt-3">
           <div className="col-6">
             <input type="number" value={targetAmount} readOnly />
           </div>
-          <div className="col-6">
+          <div className="col-6 selector">
             <CurrencySelector
-              selectedCurrency={targetCurrency}
-              rate={rate}
               onChange={handleTargetCurrency}
+              defaultValue={eurOption}
+              rate={rate}
             />
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <p>
+            {`${sourceAmount} ${sourceCurrency} is equal to ${targetAmount} ${targetCurrency}`}
+          </p>
         </div>
       </div>
     </div>
