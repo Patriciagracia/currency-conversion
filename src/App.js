@@ -12,7 +12,24 @@ function App() {
         </div>
       </div>
       <div className="footer">
-        <footer> programado por patri, enlace a github </footer>
+        <footer>
+          {" "}
+          Developed by{" "}
+          <a
+            href="https://www.linkedin.com/in/patricia-gracia/"
+            target="_blank"
+          >
+            Patricia Gracia
+          </a>{" "}
+          {""}. Open-sourced on {""}
+          <a
+            href="https://github.com/Patriciagracia/currency-conversion"
+            target="_blank"
+          >
+            Github
+          </a>
+          .
+        </footer>
       </div>
     </div>
   );

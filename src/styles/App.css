@@ -21,7 +21,8 @@ body {
   font-size: calc(2rem + 1.5vw);
 }
 
-footer {
+footer,
+a {
   text-align: center;
-  color: #ffffff;
+  color: #ffffff !important;
 }

@@ -66,7 +66,7 @@ export default function CurrencyConverter() {
     } else {
       targetRate = rate[targetCurrency];
     }
-    console.log("(" + amount + "/" + sourceRate + ")*" + targetRate);
+
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
 
     setTargetAmount(newAmount);
