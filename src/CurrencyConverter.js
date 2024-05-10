@@ -8,7 +8,7 @@ export default function CurrencyConverter() {
   const [sourceCurrency, setSourceCurrency] = useState("GBP");
   const [targetCurrency, setTargetCurrency] = useState("EUR");
   const [sourceAmount, setSourceAmount] = useState(1);
-  const [targetAmount, setTargetAmount] = useState({});
+  const [targetAmount, setTargetAmount] = useState(0);
   const gbpOption = { value: "GBP", label: "British Pound - GBP" };
   const eurOption = { value: "EUR", label: "Euro - EUR" };
   let sourceRate = 1;
@@ -17,6 +17,10 @@ export default function CurrencyConverter() {
   useEffect(() => {
     fetchCurrencyData();
   }, []);
+
+  useEffect(() => {
+    defaultConversion();
+  }, [rate, sourceCurrency, targetCurrency]);
 
   function fetchCurrencyData() {
     const apiUrl = "https://api.frankfurter.app/latest";
@@ -29,6 +33,14 @@ export default function CurrencyConverter() {
       .catch((error) => {
         console.error("Error fetching data");
       });
+  }
+
+  function defaultConversion() {
+    let sourceRate = rate[sourceCurrency] || 1;
+    let targetRate = rate[targetCurrency] || 1;
+
+    const newAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(2);
+    setTargetAmount(newAmount);
   }
 
   const handleCurrencyChange = (currency) => {
@@ -55,7 +67,7 @@ export default function CurrencyConverter() {
       targetRate = rate[targetCurrency];
     }
     console.log("(" + amount + "/" + sourceRate + ")*" + targetRate);
-    const newAmount = (amount / sourceRate) * targetRate;
+    const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
 
     setTargetAmount(newAmount);
   }
