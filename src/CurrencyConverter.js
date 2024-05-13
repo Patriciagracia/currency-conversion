@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CurrencyConverter.css";
 import CurrencySelector from "./CurrencySelector";
+import Button from "./Button";
 import axios from "axios";
 
 export default function CurrencyConverter() {
@@ -72,6 +73,33 @@ export default function CurrencyConverter() {
     setTargetAmount(newAmount);
   }
 
+  const handleSwap = () => {
+    const temp = sourceCurrency;
+    setSourceCurrency(targetCurrency);
+    setTargetCurrency(temp);
+  };
+
+  function handleTargetAmountChange(e) {
+    const amount = e.target.value;
+    setTargetAmount(amount);
+
+    if (sourceCurrency === "EUR") {
+      sourceRate = 1;
+    } else {
+      sourceRate = rate[sourceCurrency];
+    }
+
+    if (targetCurrency === "EUR") {
+      targetRate = 1;
+    } else {
+      targetRate = rate[targetCurrency];
+    }
+
+    const newAmount = ((amount / targetRate) * sourceRate).toFixed(2);
+
+    setSourceAmount(newAmount);
+  }
+
   return (
     <div className="currencyConversionForm">
       <div className="container">
@@ -83,7 +111,7 @@ export default function CurrencyConverter() {
               type="number"
             />
           </div>
-          <div className="col-6 selector">
+          <div className="col-6 selector" id="from">
             <CurrencySelector
               onChange={handleCurrencyChange}
               defaultValue={gbpOption}
@@ -91,11 +119,24 @@ export default function CurrencyConverter() {
             />
           </div>
         </div>
+        <div className="row swapBtn">
+          <Button
+            onSwap={handleSwap}
+            sourceCurrency={sourceCurrency}
+            targetCurrency={targetCurrency}
+            handleCurrencyChange={handleCurrencyChange}
+            handleTargetCurrency={handleTargetCurrency}
+          />
+        </div>
         <div className="row targetData mt-3">
           <div className="col-6">
-            <input type="number" value={targetAmount} readOnly />
+            <input
+              value={targetAmount}
+              onChange={handleTargetAmountChange}
+              type="number"
+            />
           </div>
-          <div className="col-6 selector">
+          <div className="col-6 selector" id="to">
             <CurrencySelector
               onChange={handleTargetCurrency}
               defaultValue={eurOption}
