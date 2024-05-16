@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CurrencyConverter.css";
 import CurrencySelector from "./CurrencySelector";
-import Button from "./Button";
 import axios from "axios";
 
 export default function CurrencyConverter() {
   const [rate, setRate] = useState({});
-  const [sourceCurrency, setSourceCurrency] = useState("GBP");
-  const [targetCurrency, setTargetCurrency] = useState("EUR");
+  const [sourceCurrency, setSourceCurrency] = useState({
+    value: "GBP",
+    label: "GBP - British Pound",
+  });
+  const [targetCurrency, setTargetCurrency] = useState({
+    value: "EUR",
+    label: "EUR - Euro",
+  });
   const [sourceAmount, setSourceAmount] = useState(1);
   const [targetAmount, setTargetAmount] = useState(0);
 
@@ -33,8 +38,8 @@ export default function CurrencyConverter() {
   }
 
   function conversion() {
-    const sourceRate = rate[sourceCurrency] || 1;
-    const targetRate = rate[targetCurrency] || 1;
+    const sourceRate = rate[sourceCurrency.value] || 1;
+    const targetRate = rate[targetCurrency.value] || 1;
 
     const convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(
       2
@@ -42,7 +47,6 @@ export default function CurrencyConverter() {
     setTargetAmount(convertedAmount);
   }
 
-  // Esta función se encarga de realizar el cambio de la divisa de origen y objetivo
   const handleCurrencyChange = (currency, isSourceCurrency) => {
     if (isSourceCurrency) {
       setSourceCurrency(currency);
@@ -51,25 +55,24 @@ export default function CurrencyConverter() {
     }
   };
 
-  // Esta función se encarga de realizar el cambio de la divisa de origen, teniendo en cuenta la base de EUR = 1
   function handleSourceAmountChange(e) {
     const amount = e.target.value;
     setSourceAmount(amount);
 
     let sourceRate;
 
-    if (sourceCurrency === "EUR") {
+    if (sourceCurrency.value === "EUR") {
       sourceRate = 1;
     } else {
-      sourceRate = rate[sourceCurrency];
+      sourceRate = rate[sourceCurrency.value];
     }
 
     let targetRate;
 
-    if (targetCurrency === "EUR") {
+    if (targetCurrency.value === "EUR") {
       targetRate = 1;
     } else {
-      targetRate = rate[targetCurrency];
+      targetRate = rate[targetCurrency.value];
     }
 
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
@@ -77,24 +80,22 @@ export default function CurrencyConverter() {
     setTargetAmount(newAmount);
   }
 
-  // Esta función se encarga de realizar el cambio de la divisa de destino, teniendo en cuenta la base de EUR = 1
-
   function handleTargetAmountChange(e) {
     const amount = e.target.value;
     setTargetAmount(amount);
 
     let sourceRate;
-    if (sourceCurrency === "EUR") {
+    if (sourceCurrency.value === "EUR") {
       sourceRate = 1;
     } else {
-      sourceRate = rate[sourceCurrency];
+      sourceRate = rate[sourceCurrency.value];
     }
 
     let targetRate;
-    if (targetCurrency === "EUR") {
+    if (targetCurrency.value === "EUR") {
       targetRate = 1;
     } else {
-      targetRate = rate[targetCurrency];
+      targetRate = rate[targetCurrency.value];
     }
 
     const newAmount = ((amount / targetRate) * sourceRate).toFixed(2);
@@ -102,12 +103,7 @@ export default function CurrencyConverter() {
     setSourceAmount(newAmount);
   }
 
-  // Esta función se encarga de realizar el intercambio de divisas cuando se hace click en el botón
   function intercambioDivisas() {
-    /*console.log("pasa por intercambio Divisas");
-    console.log(targetCurrency);
-    console.log(sourceCurrency);*/
-
     setSourceCurrency(targetCurrency);
     setTargetCurrency(sourceCurrency);
   }
@@ -126,9 +122,7 @@ export default function CurrencyConverter() {
           <div className="col-6 selector" id="from">
             <CurrencySelector
               onChange={(currency) => handleCurrencyChange(currency, true)}
-              value={{ value: sourceCurrency, label: sourceCurrency }} //<-- He eliminado aquello de const currentSourceOption para simplificar
-              //rate={rate}
-              //label={sourceCurrency} // he agregado label, es un prop que se pasa desde CurrencySelector (aunque no funciona)
+              currency={sourceCurrency}
             />
           </div>
         </div>
@@ -136,7 +130,6 @@ export default function CurrencyConverter() {
           <button
             onClick={() => {
               intercambioDivisas();
-              //cambioValoresSelect();
             }}
           >
             {" "}
@@ -161,9 +154,7 @@ export default function CurrencyConverter() {
           <div className="col-6 selector" id="to">
             <CurrencySelector
               onChange={(currency) => handleCurrencyChange(currency, false)}
-              value={{ value: targetCurrency, label: targetCurrency }}
-              //rate={rate}
-              //label={targetCurrency} //he agregado label, es un prop que se pasa desde CurrencySelector (aunque no funciona)
+              currency={targetCurrency}
             />
           </div>
         </div>
@@ -171,7 +162,7 @@ export default function CurrencyConverter() {
       <div className="row">
         <div className="col">
           <p>
-            {`${sourceAmount} ${sourceCurrency} is equal to ${targetAmount} ${targetCurrency}`}
+            {`${sourceAmount} ${sourceCurrency.value} is equal to ${targetAmount} ${targetCurrency.value}`}
           </p>
         </div>
       </div>

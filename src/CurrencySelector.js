@@ -2,23 +2,13 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
 
-export default function CurrencySelector({ onChange, value }) {
-  console.log(value);
-
+export default function CurrencySelector({ onChange, currency }) {
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState(value);
-
-  //console.log("selectedCurrency");
-  //console.log(selectedCurrency);
-  //onChange(selectedCurrency.value);
+  const [selectedCurrency, setSelectedCurrency] = useState(currency.value);
 
   const onChangeCurrency = (selectedOption) => {
     setSelectedCurrency(selectedOption);
-    onChange(selectedOption.value);
-    /*return {
-      value: selectedOption.value,
-      label: selectedOption.label,
-    };*/
+    onChange(selectedOption);
   };
 
   useEffect(() => {
@@ -40,14 +30,13 @@ export default function CurrencySelector({ onChange, value }) {
   }, []);
 
   useEffect(() => {
-    setSelectedCurrency(value);
-  }, [value]);
+    setSelectedCurrency(currency);
+  }, [currency]);
 
   return (
     <div>
       <Select
         value={selectedCurrency}
-        //label={etiqueta} //en mi mente esto proviene de la línea 21 y serviría para arreglar el problema del texto mostrado en el selector
         onChange={onChangeCurrency}
         options={currencyOptions}
       />
