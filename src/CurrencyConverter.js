@@ -10,16 +10,14 @@ export default function CurrencyConverter() {
   const [targetCurrency, setTargetCurrency] = useState("EUR");
   const [sourceAmount, setSourceAmount] = useState(1);
   const [targetAmount, setTargetAmount] = useState(0);
-  const [valorSelect1, setValorSelect1] = useState("");
-  const [valorSelect2, setValorSelect2] = useState("");
 
   useEffect(() => {
     fetchCurrencyData();
   }, []);
 
   useEffect(() => {
-    defaultConversion();
-  }, [rate, sourceCurrency, targetCurrency]);
+    conversion();
+  }, [rate, sourceCurrency, targetCurrency, sourceAmount]);
 
   function fetchCurrencyData() {
     const apiUrl = "https://api.frankfurter.app/latest";
@@ -34,8 +32,7 @@ export default function CurrencyConverter() {
       });
   }
 
-  // Esta función se encarga de realizar la conversión de divisas por defecto cuando se carga la página por primera vez
-  function defaultConversion() {
+  function conversion() {
     const sourceRate = rate[sourceCurrency] || 1;
     const targetRate = rate[targetCurrency] || 1;
 
@@ -45,17 +42,13 @@ export default function CurrencyConverter() {
     setTargetAmount(convertedAmount);
   }
 
-  // Esta función se encarga de realizar el cambio de la divisa de origen
-  const handleCurrencyChange = (currency) => {
-    console.log("pasa por handleCurrencyChange");
-    console.log(currency);
-    setSourceCurrency(currency);
-  };
-  // Esta función se encarga de realizar el cambio de la divisa objetivo
-  const handleTargetCurrency = (currency) => {
-    console.log("pasa por handleTargetCurrency");
-    console.log(currency);
-    setTargetCurrency(currency);
+  // Esta función se encarga de realizar el cambio de la divisa de origen y objetivo
+  const handleCurrencyChange = (currency, isSourceCurrency) => {
+    if (isSourceCurrency) {
+      setSourceCurrency(currency);
+    } else {
+      setTargetCurrency(currency);
+    }
   };
 
   // Esta función se encarga de realizar el cambio de la divisa de origen, teniendo en cuenta la base de EUR = 1
@@ -111,31 +104,12 @@ export default function CurrencyConverter() {
 
   // Esta función se encarga de realizar el intercambio de divisas cuando se hace click en el botón
   function intercambioDivisas() {
-    console.log("pasa por intercambio Divisas");
+    /*console.log("pasa por intercambio Divisas");
     console.log(targetCurrency);
-    console.log(sourceCurrency);
+    console.log(sourceCurrency);*/
 
     setSourceCurrency(targetCurrency);
     setTargetCurrency(sourceCurrency);
-  }
-
-  // Aquí estoy definiendo las opciones de los selectores (creo que el conversor utiliza bien lo valores y que el fallo está en el label)
-  const currentSourceOption = {
-    value: sourceCurrency,
-    label: sourceCurrency,
-  };
-  const currentTargetOption = {
-    value: targetCurrency,
-    label: targetCurrency,
-  };
-
-  // He creado esta función para intentar cambiar el texto de los selectores, usando los objetos que hay justo arriba
-  function cambioValoresSelect() {
-    console.log("cambio de valores select");
-    console.log(currentSourceOption);
-    console.log(currentTargetOption);
-    setValorSelect1(currentSourceOption);
-    setValorSelect2(currentTargetOption);
   }
 
   return (
@@ -151,8 +125,8 @@ export default function CurrencyConverter() {
           </div>
           <div className="col-6 selector" id="from">
             <CurrencySelector
-              onChange={handleCurrencyChange}
-              value={currentSourceOption}
+              onChange={(currency) => handleCurrencyChange(currency, true)}
+              value={{ value: sourceCurrency, label: sourceCurrency }} //<-- He eliminado aquello de const currentSourceOption para simplificar
               //rate={rate}
               //label={sourceCurrency} // he agregado label, es un prop que se pasa desde CurrencySelector (aunque no funciona)
             />
@@ -162,7 +136,7 @@ export default function CurrencyConverter() {
           <button
             onClick={() => {
               intercambioDivisas();
-              cambioValoresSelect();
+              //cambioValoresSelect();
             }}
           >
             {" "}
@@ -186,8 +160,8 @@ export default function CurrencyConverter() {
           </div>
           <div className="col-6 selector" id="to">
             <CurrencySelector
-              onChange={handleTargetCurrency}
-              value={currentTargetOption}
+              onChange={(currency) => handleCurrencyChange(currency, false)}
+              value={{ value: targetCurrency, label: targetCurrency }}
               //rate={rate}
               //label={targetCurrency} //he agregado label, es un prop que se pasa desde CurrencySelector (aunque no funciona)
             />

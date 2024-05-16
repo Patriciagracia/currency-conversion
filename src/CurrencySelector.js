@@ -39,6 +39,10 @@ export default function CurrencySelector({ onChange, value }) {
       });
   }, []);
 
+  useEffect(() => {
+    setSelectedCurrency(value);
+  }, [value]);
+
   return (
     <div>
       <Select
