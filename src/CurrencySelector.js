@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
 
-export default function CurrencySelector({ onChange, currency }) {
+export default function CurrencySelector({ onCurrencyChange, currency }) {
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState(currency.value);
 
-  const onChangeCurrency = (selectedOption) => {
+  const handleCurrencyChange = (selectedOption) => {
     setSelectedCurrency(selectedOption);
-    onChange(selectedOption);
+    onCurrencyChange(selectedOption);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function CurrencySelector({ onChange, currency }) {
     <div>
       <Select
         value={selectedCurrency}
-        onChange={onChangeCurrency}
+        onChange={handleCurrencyChange}
         options={currencyOptions}
       />
     </div>
