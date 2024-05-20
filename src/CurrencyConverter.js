@@ -57,12 +57,13 @@ export default function CurrencyConverter() {
   };
 
   function handleSourceAmountChange(e) {
-    const amount = parseFloat(e.target.value); // Ensure it's a number
-    const limitedDecimals = parseFloat(amount.toFixed(2)); // Limit to 2 decimals and convert back to number
-    setSourceAmount(limitedDecimals);
+    const amount = parseFloat(e.target.value);
+    const limitedDecimals = parseFloat(amount.toFixed(2));
+    if (e.target.value.length <= 10) {
+      setSourceAmount(limitedDecimals);
+    }
 
     let sourceRate;
-
     if (sourceCurrency.value === "EUR") {
       sourceRate = 1;
     } else {
@@ -85,7 +86,9 @@ export default function CurrencyConverter() {
   function handleTargetAmountChange(e) {
     const amount = parseFloat(e.target.value);
     const limitedDecimals = parseFloat(amount.toFixed(2));
-    setTargetAmount(limitedDecimals);
+    if (e.target.value.length <= 10) {
+      setTargetAmount(limitedDecimals);
+    }
 
     let sourceRate;
     if (sourceCurrency.value === "EUR") {
