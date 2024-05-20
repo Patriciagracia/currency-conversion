@@ -17,7 +17,7 @@ export default function Button({ onSwap }) {
 
   return (
     <button
-      className="swapBtn"
+      className="button"
       onClick={() => {
         swap();
       }}

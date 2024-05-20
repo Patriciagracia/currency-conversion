@@ -5,13 +5,13 @@ import CurrencyConverter from "./CurrencyConverter";
 function App() {
   return (
     <div className="container">
-      <h1 className="mt-4">Currency Converter</h1>
+      <h1 className="mt-3">Currency Converter</h1>
       <div className="App">
         <div className="currencyConverter">
           <CurrencyConverter />
         </div>
       </div>
-      <div className="footer">
+      <div className="footer mt-2">
         <footer>
           {" "}
           Developed by{" "}

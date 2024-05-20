@@ -114,54 +114,52 @@ export default function CurrencyConverter() {
   return (
     <div className="currencyConversionForm">
       <div className="container">
-        <div className="row sourceData mb-3">
-          <span className="col-md-6">
-            <input
-              value={sourceAmount}
-              onChange={handleSourceAmountChange}
-              type="number"
-            />
-          </span>
-          <span className="col-md-6">
-            <CurrencySelector
-              className="selector"
-              onCurrencyChange={(currency) =>
-                handleCurrencyChange(currency, true)
-              }
-              currency={sourceCurrency}
-            />
-          </span>
+        <div className="row">
+          <div className="col">
+            <div className="input-group mb-3">
+              <input
+                value={sourceAmount}
+                onChange={handleSourceAmountChange}
+                type="number"
+              />
+              <div className="col selector">
+                <CurrencySelector
+                  onCurrencyChange={(currency) =>
+                    handleCurrencyChange(currency, true)
+                  }
+                  currency={sourceCurrency}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="row swapBtn">
-          {
-            <Button
-              onSwap={swapCurrencies}
-              sourceCurrency={sourceCurrency}
-              targetCurrency={targetCurrency}
-            />
-          }
+        <div className="row button">
+          <Button
+            onSwap={swapCurrencies}
+            sourceCurrency={sourceCurrency}
+            targetCurrency={targetCurrency}
+          />
         </div>
-        <div className="row targetData mt-3">
-          <span className="col-md-6">
-            <input
-              value={targetAmount}
-              onChange={handleTargetAmountChange}
-              type="number"
-            />
-          </span>
-          <span className="col-md-6">
-            <CurrencySelector
-              className="selector"
-              onCurrencyChange={(currency) =>
-                handleCurrencyChange(currency, false)
-              }
-              currency={targetCurrency}
-            />
-          </span>
+        <div className="row mt-3">
+          <div className="col">
+            <div className="input-group mb-3">
+              <input
+                value={targetAmount}
+                onChange={handleTargetAmountChange}
+                type="number"
+              />
+              <div className="col selector">
+                <CurrencySelector
+                  onCurrencyChange={(currency) =>
+                    handleCurrencyChange(currency, false)
+                  }
+                  currency={targetCurrency}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col">
+        <div className="row mt-3 text-center">
           <p>
             {`${sourceAmount} ${sourceCurrency.value} is equal to ${targetAmount} ${targetCurrency.value}`}
           </p>
