@@ -2,23 +2,29 @@ body {
   min-height: 20vh;
   display: flex;
   justify-content: center;
-  align-items: center;
   background: #695087 !important;
 }
 
 .App {
-  margin-top: 10%;
+  margin-top: 6%;
   background-color: white;
-  padding: 50px 60px 50px 60px;
+  padding: 60px 70px 60px 70px;
   border-radius: 15px;
   font-family: "Jost", sans-serif;
+  width: 500px;
+}
+
+@media (max-device-width: 480px) {
+  .App {
+    width: 100%;
+  }
 }
 
 .container h1 {
   text-align: center;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff !important;
-  font-size: calc(2rem + 1.5vw);
+  font-size: calc(1.3rem + 1.5vw);
 }
 
 footer,

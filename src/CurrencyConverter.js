@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CurrencyConverter.css";
 import CurrencySelector from "./CurrencySelector";
+import Button from "./Button";
 import axios from "axios";
 
 export default function CurrencyConverter() {
@@ -56,8 +57,9 @@ export default function CurrencyConverter() {
   };
 
   function handleSourceAmountChange(e) {
-    const amount = e.target.value;
-    setSourceAmount(amount);
+    const amount = parseFloat(e.target.value); // Ensure it's a number
+    const limitedDecimals = parseFloat(amount.toFixed(2)); // Limit to 2 decimals and convert back to number
+    setSourceAmount(limitedDecimals);
 
     let sourceRate;
 
@@ -81,8 +83,9 @@ export default function CurrencyConverter() {
   }
 
   function handleTargetAmountChange(e) {
-    const amount = e.target.value;
-    setTargetAmount(amount);
+    const amount = parseFloat(e.target.value);
+    const limitedDecimals = parseFloat(amount.toFixed(2));
+    setTargetAmount(limitedDecimals);
 
     let sourceRate;
     if (sourceCurrency.value === "EUR") {
@@ -103,7 +106,7 @@ export default function CurrencyConverter() {
     setSourceAmount(newAmount);
   }
 
-  function intercambioDivisas() {
+  function swapCurrencies() {
     setSourceCurrency(targetCurrency);
     setTargetCurrency(sourceCurrency);
   }
@@ -111,56 +114,52 @@ export default function CurrencyConverter() {
   return (
     <div className="currencyConversionForm">
       <div className="container">
-        <div className="row sourceData mb-3">
-          <div className="col-6">
-            <input
-              value={sourceAmount}
-              onChange={handleSourceAmountChange}
-              type="number"
-            />
-          </div>
-          <div className="col-6 selector" id="from">
-            <CurrencySelector
-              onChange={(currency) => handleCurrencyChange(currency, true)}
-              currency={sourceCurrency}
-            />
-          </div>
-        </div>
-        <div className="row swapBtn">
-          <button
-            onClick={() => {
-              intercambioDivisas();
-            }}
-          >
-            {" "}
-            😭
-          </button>
-          {/* <Button
-  onSwap={handleSwap}
-  sourceCurrency={sourceCurrency}
-  targetCurrency={targetCurrency}
-  handleCurrencyChange={handleCurrencyChange}
-  handleTargetCurrency={handleTargetCurrency}
-/> */}
-        </div>
-        <div className="row targetData mt-3">
-          <div className="col-6">
-            <input
-              value={targetAmount}
-              onChange={handleTargetAmountChange}
-              type="number"
-            />
-          </div>
-          <div className="col-6 selector" id="to">
-            <CurrencySelector
-              onChange={(currency) => handleCurrencyChange(currency, false)}
-              currency={targetCurrency}
-            />
+        <div className="row">
+          <div className="col">
+            <div className="input-group mb-3">
+              <input
+                value={sourceAmount}
+                onChange={handleSourceAmountChange}
+                type="number"
+              />
+              <div className="col selector">
+                <CurrencySelector
+                  onCurrencyChange={(currency) =>
+                    handleCurrencyChange(currency, true)
+                  }
+                  currency={sourceCurrency}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        <div className="col">
+        <div className="row button">
+          <Button
+            onSwap={swapCurrencies}
+            sourceCurrency={sourceCurrency}
+            targetCurrency={targetCurrency}
+          />
+        </div>
+        <div className="row mt-3">
+          <div className="col">
+            <div className="input-group mb-3">
+              <input
+                value={targetAmount}
+                onChange={handleTargetAmountChange}
+                type="number"
+              />
+              <div className="col selector">
+                <CurrencySelector
+                  onCurrencyChange={(currency) =>
+                    handleCurrencyChange(currency, false)
+                  }
+                  currency={targetCurrency}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row mt-3 text-center">
           <p>
             {`${sourceAmount} ${sourceCurrency.value} is equal to ${targetAmount} ${targetCurrency.value}`}
           </p>

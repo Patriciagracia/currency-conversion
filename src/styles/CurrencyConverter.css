@@ -1,8 +1,23 @@
-input,
-.selector {
-  border-radius: 3px;
-  max-width: 100%;
+@media (max-device-width: 480px) {
+  .input-group {
+    width: 50%;
+  }
+  .input-group input {
+    max-width: 78px;
+  }
+  .select {
+    width: 140px;
+  }
 }
-input {
-  padding: 5px;
+
+.input-group {
+  width: 100%;
+}
+.select {
+  width: 200px;
+}
+
+.input-group input,
+.select {
+  border: 1px solid #cccc;
 }
