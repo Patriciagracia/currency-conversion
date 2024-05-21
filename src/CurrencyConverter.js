@@ -17,6 +17,9 @@ export default function CurrencyConverter() {
   const [sourceAmount, setSourceAmount] = useState(1);
   const [targetAmount, setTargetAmount] = useState(0);
 
+  const [tempSourceAmount, setTempSourceAmount] = useState(1);
+  const [tempTargetAmount, setTempTargetAmount] = useState(0);
+
   useEffect(() => {
     fetchCurrencyData();
   }, []);
@@ -42,10 +45,9 @@ export default function CurrencyConverter() {
     const sourceRate = rate[sourceCurrency.value] || 1;
     const targetRate = rate[targetCurrency.value] || 1;
 
-    const convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(
-      2
-    );
+    let convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(2);
     setTargetAmount(convertedAmount);
+    setTempTargetAmount(convertedAmount);
   }
 
   const handleCurrencyChange = (currency, isSourceCurrency) => {
@@ -57,10 +59,9 @@ export default function CurrencyConverter() {
   };
 
   function handleSourceAmountChange(e) {
-    const amount = parseFloat(e.target.value);
-    const limitedDecimals = parseFloat(amount.toFixed(2));
-    if (e.target.value.length <= 10) {
-      setSourceAmount(limitedDecimals);
+    let amount = e.target.value;
+    if (amount.length <= 9) {
+      setTempSourceAmount(amount);
     }
 
     let sourceRate;
@@ -79,15 +80,17 @@ export default function CurrencyConverter() {
     }
 
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
+    setTempTargetAmount(newAmount);
+  }
 
-    setTargetAmount(newAmount);
+  function handleSourceAmountBlur() {
+    setSourceAmount(tempSourceAmount);
   }
 
   function handleTargetAmountChange(e) {
-    const amount = parseFloat(e.target.value);
-    const limitedDecimals = parseFloat(amount.toFixed(2));
-    if (e.target.value.length <= 10) {
-      setTargetAmount(limitedDecimals);
+    const amount = e.target.value;
+    if (amount.length <= 9) {
+      setTempTargetAmount(amount);
     }
 
     let sourceRate;
@@ -105,8 +108,11 @@ export default function CurrencyConverter() {
     }
 
     const newAmount = ((amount / targetRate) * sourceRate).toFixed(2);
+    setTempSourceAmount(newAmount);
+  }
 
-    setSourceAmount(newAmount);
+  function handleTargetAmountBlur() {
+    setTargetAmount(tempTargetAmount);
   }
 
   function swapCurrencies() {
@@ -121,9 +127,11 @@ export default function CurrencyConverter() {
           <div className="col">
             <div className="input-group mb-3">
               <input
-                value={sourceAmount}
+                value={tempSourceAmount}
                 onChange={handleSourceAmountChange}
+                onBlur={handleSourceAmountBlur}
                 type="number"
+                step="0.01"
               />
               <div className="col selector">
                 <CurrencySelector
@@ -147,9 +155,11 @@ export default function CurrencyConverter() {
           <div className="col">
             <div className="input-group mb-3">
               <input
-                value={targetAmount}
+                value={tempTargetAmount}
                 onChange={handleTargetAmountChange}
+                onBlur={handleTargetAmountBlur}
                 type="number"
+                step="0.01"
               />
               <div className="col selector">
                 <CurrencySelector
@@ -164,7 +174,11 @@ export default function CurrencyConverter() {
         </div>
         <div className="row mt-3 text-center">
           <p>
-            {`${sourceAmount} ${sourceCurrency.value} is equal to ${targetAmount} ${targetCurrency.value}`}
+            {`${parseFloat(sourceAmount).toFixed(2)} ${
+              sourceCurrency.value
+            } is equal to ${parseFloat(targetAmount).toFixed(2)} ${
+              targetCurrency.value
+            }`}
           </p>
         </div>
       </div>
