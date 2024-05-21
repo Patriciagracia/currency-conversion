@@ -174,9 +174,9 @@ export default function CurrencyConverter() {
         </div>
         <div className="row mt-3 text-center">
           <p>
-            {`${parseFloat(sourceAmount).toFixed(2)} ${
+            {`${rate[sourceCurrency.value]} ${
               sourceCurrency.value
-            } is equal to ${parseFloat(targetAmount).toFixed(2)} ${
+            } is equal to ${rate[targetCurrency.value]} ${
               targetCurrency.value
             }`}
           </p>

@@ -7,7 +7,7 @@ export default function Button({ onSwap }) {
   const [sourceCurrencySwap, setSourceCurrencySwap] = useState();
   const [targetCurrencySwap, setTargetCurrencySwap] = useState();
 
-  function swap(e) {
+  function swap() {
     const sourceCurrency = sourceCurrencySwap;
     const targetCurrency = targetCurrencySwap;
     setSourceCurrencySwap(targetCurrency);
