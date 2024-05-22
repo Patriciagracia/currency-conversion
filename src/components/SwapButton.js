@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import "../styles/Button.css";
+import buttonIcon from "../styles/buttonIcon.png";
 
-import "./styles/Button.css";
-import buttonIcon from "./styles/buttonIcon.png";
-
-export default function Button({ onSwap }) {
+export default function SwapButton({ onSwap }) {
   const [sourceCurrencySwap, setSourceCurrencySwap] = useState();
   const [targetCurrencySwap, setTargetCurrencySwap] = useState();
 

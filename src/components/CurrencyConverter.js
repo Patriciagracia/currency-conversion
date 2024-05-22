@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "./styles/CurrencyConverter.css";
+import "../styles/CurrencyConverter.css";
 import CurrencySelector from "./CurrencySelector";
-import Button from "./Button";
+import SwapButton from "./SwapButton";
 import axios from "axios";
 
 export default function CurrencyConverter() {
@@ -16,9 +16,8 @@ export default function CurrencyConverter() {
   });
   const [sourceAmount, setSourceAmount] = useState(1);
   const [targetAmount, setTargetAmount] = useState(0);
-
-  const [tempSourceAmount, setTempSourceAmount] = useState(1);
-  const [tempTargetAmount, setTempTargetAmount] = useState(0);
+  let sourceRateFooter = 1;
+  let targetRateFooter = rate[targetCurrency.value] || 1;
 
   useEffect(() => {
     fetchCurrencyData();
@@ -26,7 +25,7 @@ export default function CurrencyConverter() {
 
   useEffect(() => {
     conversion();
-  }, [rate, sourceCurrency, targetCurrency, sourceAmount]);
+  }, [rate, sourceCurrency, targetCurrency]);
 
   function fetchCurrencyData() {
     const apiUrl = "https://api.frankfurter.app/latest";
@@ -47,7 +46,6 @@ export default function CurrencyConverter() {
 
     let convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(2);
     setTargetAmount(convertedAmount);
-    setTempTargetAmount(convertedAmount);
   }
 
   const handleCurrencyChange = (currency, isSourceCurrency) => {
@@ -61,7 +59,7 @@ export default function CurrencyConverter() {
   function handleSourceAmountChange(e) {
     let amount = e.target.value;
     if (amount.length <= 9) {
-      setTempSourceAmount(amount);
+      setSourceAmount(amount);
     }
 
     let sourceRate;
@@ -80,17 +78,14 @@ export default function CurrencyConverter() {
     }
 
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
-    setTempTargetAmount(newAmount);
-  }
-
-  function handleSourceAmountBlur() {
-    setSourceAmount(tempSourceAmount);
+    setTargetAmount(newAmount);
   }
 
   function handleTargetAmountChange(e) {
     const amount = e.target.value;
+
     if (amount.length <= 9) {
-      setTempTargetAmount(amount);
+      setTargetAmount(amount);
     }
 
     let sourceRate;
@@ -108,11 +103,7 @@ export default function CurrencyConverter() {
     }
 
     const newAmount = ((amount / targetRate) * sourceRate).toFixed(2);
-    setTempSourceAmount(newAmount);
-  }
-
-  function handleTargetAmountBlur() {
-    setTargetAmount(tempTargetAmount);
+    setSourceAmount(newAmount);
   }
 
   function swapCurrencies() {
@@ -127,11 +118,9 @@ export default function CurrencyConverter() {
           <div className="col">
             <div className="input-group mb-3">
               <input
-                value={tempSourceAmount}
+                value={sourceAmount}
                 onChange={handleSourceAmountChange}
-                onBlur={handleSourceAmountBlur}
                 type="number"
-                step="0.01"
               />
               <div className="col selector">
                 <CurrencySelector
@@ -145,7 +134,7 @@ export default function CurrencyConverter() {
           </div>
         </div>
         <div className="row button">
-          <Button
+          <SwapButton
             onSwap={swapCurrencies}
             sourceCurrency={sourceCurrency}
             targetCurrency={targetCurrency}
@@ -155,11 +144,9 @@ export default function CurrencyConverter() {
           <div className="col">
             <div className="input-group mb-3">
               <input
-                value={tempTargetAmount}
+                value={targetAmount}
                 onChange={handleTargetAmountChange}
-                onBlur={handleTargetAmountBlur}
                 type="number"
-                step="0.01"
               />
               <div className="col selector">
                 <CurrencySelector
@@ -174,11 +161,7 @@ export default function CurrencyConverter() {
         </div>
         <div className="row mt-3 text-center">
           <p>
-            {`${rate[sourceCurrency.value]} ${
-              sourceCurrency.value
-            } is equal to ${rate[targetCurrency.value]} ${
-              targetCurrency.value
-            }`}
+            {`${sourceRateFooter} ${sourceCurrency.value} is equal to ${targetRateFooter} ${targetCurrency.value}`}
           </p>
         </div>
       </div>

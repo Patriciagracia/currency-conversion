@@ -1,5 +1,5 @@
-import "./styles/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/App.css";
 import CurrencyConverter from "./CurrencyConverter";
 
 function App() {
