@@ -1,13 +1,12 @@
 import React, { useState } from "react";
+import "../styles/Button.css";
+import exchangeIcon from "../styles/exchangeIcon.png";
 
-import "./styles/Button.css";
-import buttonIcon from "./styles/buttonIcon.png";
-
-export default function Button({ onSwap }) {
+export default function SwapButton({ onSwap }) {
   const [sourceCurrencySwap, setSourceCurrencySwap] = useState();
   const [targetCurrencySwap, setTargetCurrencySwap] = useState();
 
-  function swap(e) {
+  function swap() {
     const sourceCurrency = sourceCurrencySwap;
     const targetCurrency = targetCurrencySwap;
     setSourceCurrencySwap(targetCurrency);
@@ -22,7 +21,7 @@ export default function Button({ onSwap }) {
         swap();
       }}
     >
-      <img src={buttonIcon} alt="submit" />
+      <img src={exchangeIcon} alt="submit" />
     </button>
   );
 }

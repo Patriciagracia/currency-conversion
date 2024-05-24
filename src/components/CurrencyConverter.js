@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./styles/CurrencyConverter.css";
+import "../styles/CurrencyConverter.css";
+
 import CurrencySelector from "./CurrencySelector";
-import Button from "./Button";
+import SwapButton from "./SwapButton";
 import axios from "axios";
 
 export default function CurrencyConverter() {
@@ -23,7 +24,7 @@ export default function CurrencyConverter() {
 
   useEffect(() => {
     conversion();
-  }, [rate, sourceCurrency, targetCurrency, sourceAmount]);
+  }, [rate, sourceCurrency, targetCurrency]);
 
   function fetchCurrencyData() {
     const apiUrl = "https://api.frankfurter.app/latest";
@@ -42,9 +43,12 @@ export default function CurrencyConverter() {
     const sourceRate = rate[sourceCurrency.value] || 1;
     const targetRate = rate[targetCurrency.value] || 1;
 
-    const convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(
-      2
-    );
+    if (isNaN(sourceAmount) || sourceAmount === "" || sourceAmount === ".") {
+      setTargetAmount(0);
+      return;
+    }
+
+    let convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(2);
     setTargetAmount(convertedAmount);
   }
 
@@ -57,37 +61,31 @@ export default function CurrencyConverter() {
   };
 
   function handleSourceAmountChange(e) {
-    const amount = parseFloat(e.target.value);
-    const limitedDecimals = parseFloat(amount.toFixed(2));
-    if (e.target.value.length <= 10) {
-      setSourceAmount(limitedDecimals);
+    let amount = e.target.value;
+
+    if (amount === "" || amount === ".") {
+      setSourceAmount(amount);
+      return;
     }
 
-    let sourceRate;
-    if (sourceCurrency.value === "EUR") {
-      sourceRate = 1;
-    } else {
-      sourceRate = rate[sourceCurrency.value];
+    if (amount.length <= 9 && !isNaN(amount)) {
+      setSourceAmount(amount);
     }
 
-    let targetRate;
-
-    if (targetCurrency.value === "EUR") {
-      targetRate = 1;
-    } else {
-      targetRate = rate[targetCurrency.value];
-    }
+    let sourceRate =
+      sourceCurrency.value === "EUR" ? 1 : rate[sourceCurrency.value];
+    let targetRate =
+      targetCurrency.value === "EUR" ? 1 : rate[targetCurrency.value];
 
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
-
     setTargetAmount(newAmount);
   }
 
   function handleTargetAmountChange(e) {
-    const amount = parseFloat(e.target.value);
-    const limitedDecimals = parseFloat(amount.toFixed(2));
-    if (e.target.value.length <= 10) {
-      setTargetAmount(limitedDecimals);
+    const amount = e.target.value;
+
+    if (amount.length <= 9) {
+      setTargetAmount(amount);
     }
 
     let sourceRate;
@@ -137,7 +135,7 @@ export default function CurrencyConverter() {
           </div>
         </div>
         <div className="row button">
-          <Button
+          <SwapButton
             onSwap={swapCurrencies}
             sourceCurrency={sourceCurrency}
             targetCurrency={targetCurrency}
@@ -164,7 +162,13 @@ export default function CurrencyConverter() {
         </div>
         <div className="row mt-3 text-center">
           <p>
-            {`${sourceAmount} ${sourceCurrency.value} is equal to ${targetAmount} ${targetCurrency.value}`}
+            <span id="sourceText">
+              {`${sourceAmount} ${sourceCurrency.value} `}
+            </span>
+            is equal to
+            <span id="targetText">
+              {` ${targetAmount} ${targetCurrency.value} `}
+            </span>
           </p>
         </div>
       </div>
