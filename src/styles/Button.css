@@ -1,3 +1,9 @@
+:root {
+  --primary: #ebba28;
+  --secondary: #85b0f41c;
+  --accent: #bc4fef;
+}
+
 .button {
   display: flex;
   justify-content: center;
@@ -7,10 +13,5 @@
   margin: 0 auto 10px;
   border: 0;
   border-radius: 50px;
-  background-color: #ebe7f0 !important;
-  text-align: center;
-}
-
-.button:hover {
-  background-color: #f1e6fe !important;
+  background-color: var(--primary) !important;
 }

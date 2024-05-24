@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/CurrencyConverter.css";
+
 import CurrencySelector from "./CurrencySelector";
 import SwapButton from "./SwapButton";
 import axios from "axios";
@@ -16,8 +17,6 @@ export default function CurrencyConverter() {
   });
   const [sourceAmount, setSourceAmount] = useState(1);
   const [targetAmount, setTargetAmount] = useState(0);
-  let sourceRateFooter = 1;
-  let targetRateFooter = rate[targetCurrency.value] || 1;
 
   useEffect(() => {
     fetchCurrencyData();
@@ -44,6 +43,11 @@ export default function CurrencyConverter() {
     const sourceRate = rate[sourceCurrency.value] || 1;
     const targetRate = rate[targetCurrency.value] || 1;
 
+    if (isNaN(sourceAmount) || sourceAmount === "" || sourceAmount === ".") {
+      setTargetAmount(0);
+      return;
+    }
+
     let convertedAmount = ((sourceAmount / sourceRate) * targetRate).toFixed(2);
     setTargetAmount(convertedAmount);
   }
@@ -58,24 +62,21 @@ export default function CurrencyConverter() {
 
   function handleSourceAmountChange(e) {
     let amount = e.target.value;
-    if (amount.length <= 9) {
+
+    // Allow the dot character without converting
+    if (amount === "" || amount === ".") {
+      setSourceAmount(amount);
+      return;
+    }
+
+    if (amount.length <= 9 && !isNaN(amount)) {
       setSourceAmount(amount);
     }
 
-    let sourceRate;
-    if (sourceCurrency.value === "EUR") {
-      sourceRate = 1;
-    } else {
-      sourceRate = rate[sourceCurrency.value];
-    }
-
-    let targetRate;
-
-    if (targetCurrency.value === "EUR") {
-      targetRate = 1;
-    } else {
-      targetRate = rate[targetCurrency.value];
-    }
+    let sourceRate =
+      sourceCurrency.value === "EUR" ? 1 : rate[sourceCurrency.value];
+    let targetRate =
+      targetCurrency.value === "EUR" ? 1 : rate[targetCurrency.value];
 
     const newAmount = ((amount / sourceRate) * targetRate).toFixed(2);
     setTargetAmount(newAmount);
@@ -103,6 +104,7 @@ export default function CurrencyConverter() {
     }
 
     const newAmount = ((amount / targetRate) * sourceRate).toFixed(2);
+
     setSourceAmount(newAmount);
   }
 
@@ -161,7 +163,13 @@ export default function CurrencyConverter() {
         </div>
         <div className="row mt-3 text-center">
           <p>
-            {`${sourceRateFooter} ${sourceCurrency.value} is equal to ${targetRateFooter} ${targetCurrency.value}`}
+            <span id="sourceText">
+              {`${sourceAmount} ${sourceCurrency.value} `}
+            </span>
+            is equal to
+            <span id="targetText">
+              {` ${targetAmount} ${targetCurrency.value} `}
+            </span>
           </p>
         </div>
       </div>
