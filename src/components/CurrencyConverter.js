@@ -63,7 +63,6 @@ export default function CurrencyConverter() {
   function handleSourceAmountChange(e) {
     let amount = e.target.value;
 
-    // Allow the dot character without converting
     if (amount === "" || amount === ".") {
       setSourceAmount(amount);
       return;
